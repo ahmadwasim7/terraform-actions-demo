@@ -10,12 +10,12 @@ resource "aws_instance" "manual_ec2" {
   region                      = "ap-southeast-1"
   ami                         = "ami-093a7f5fbae13ff67"
   associate_public_ip_address = true
-  instance_type               = "t2.micronano" 
+  instance_type               = "t2.micronano"
   #key_name                             = "my_key_pair_usa"
 
   tags = {
     Name = "Managed from Terraform"
-}
+  }
 
   #vpc_security_group_ids      = [aws_security_group.manual_sg.id]
 
