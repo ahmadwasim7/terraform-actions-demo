@@ -15,7 +15,7 @@ resource "aws_instance" "manual_ec2" {
 
   tags = {
     Name = "Managed from Terraform"
-{
+}
 
   #vpc_security_group_ids      = [aws_security_group.manual_sg.id]
 
