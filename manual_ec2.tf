@@ -1,9 +1,10 @@
 resource "aws_instance" "manual_ec2" {
-  #ami           = "ami-068c0051b15cdb816"
+  ami           = "ami-0ecb62995f68bb549"
   instance_type = "t2.micro"
 
   tags = {
-    Name = "Provisioned using Terraform through CI/CD on Githhub Actions"
+    Name = "Ubuntu Server"
+    Description = "Provisioned using Terraform through CI/CD on Githhub Actions"
   }
 }
 
