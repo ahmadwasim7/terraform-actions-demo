@@ -5,6 +5,7 @@ resource "aws_instance" "manual_ec2" {
   tags = {
     Name        = "Ubuntu Server"
     Description = "Provisioned using Terraform through CI/CD on Githhub Actions"
+    Environment = "Production"
   }
 }
 
