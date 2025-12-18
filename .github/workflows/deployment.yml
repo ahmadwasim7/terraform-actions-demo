@@ -50,7 +50,3 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-
-      - name: Output Context
-        run: echo "${{ toJSON(github) }}"
- 
