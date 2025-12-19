@@ -39,3 +39,25 @@ jobs:
           path: |
             tfplan
             terraform-plan.json
+
+  terraform-apply:
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Terraform plan artifact
+        uses: actions/download-artifact@v7
+        with:
+          name: terraform-plan-files
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply tfplan
