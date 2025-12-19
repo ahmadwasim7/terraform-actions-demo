@@ -23,7 +23,7 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Upload Terraform plan artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         with:
           name: terraform-plan-files
           path: |
