@@ -29,6 +29,9 @@ jobs:
       - name: Terraform Plan
         run: terraform plan -out=tfplan
 
+      - name: Generate Terraform plan JSON
+        run: terraform show -json tfplan > terraform-plan.json
+
       - name: Upload Terraform plan artifact
         uses: actions/upload-artifact@v6
         with:
