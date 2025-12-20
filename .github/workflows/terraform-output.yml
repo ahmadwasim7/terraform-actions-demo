@@ -1,0 +1,38 @@
+name: Terraform Output
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+
+    outputs:
+      workspace-name: ${{ steps.detect-workspace.outputs.workspace }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Detect Terraform workspace
+        id: detect-workspace
+        run: |
+          WORKSPACE=$(terraform workspace show)
+          echo "workspace=$WORKSPACE" >> $GITHUB_OUTPUT
+
+  terraform-apply:
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Print workspace name
+        run: |
+          echo "Terraform workspace: ${{ needs.terraform-plan.outputs.workspace-name }}"
