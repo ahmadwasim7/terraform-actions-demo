@@ -1,31 +1,44 @@
-name: Terraform CI - Step Level Env
+name: Terraform CI - Environment Specific Secrets
 
 on:
   push:
     branches:
-      - master
-
-env:
-  AWS_REGION: ap-south-1
+      - main
 
 jobs:
   terraform-plan:
+    name: Terraform Plan (Test)
     runs-on: ubuntu-latest
-    env:
-      TF_VAR_environment: test
+    environment: test
 
     steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      - uses: actions/checkout@v4
-      - uses: hashicorp/setup-terraform@v3
-      - run: terraform init
-      - name: Terraform Plan ( Default Verbosity)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init (Test)
+        run: terraform init
+
+      - name: Terraform Plan (Test)
         run: terraform plan
-      - name: Terraform Plan ( With Trace Verbosity)
-        env:
-          TF_LOG: TRACE
-        run: terraform plan
+
+  terraform-apply:
+    name: Terraform Apply (Production)
+    runs-on: ubuntu-latest
+    needs: terraform-plan
+    environment: production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init (Production)
+        run: terraform init
+
+      - name: Terraform Apply (Production)
+        run: terraform apply -auto-approve
