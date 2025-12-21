@@ -23,11 +23,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
       - run: terraform init
-      - name: Terraform Plan ( With Trace Verbosity)
-        env:
-          TF_LOG: TRACE
-        run: terraform plan
       - name: Terraform Plan ( Default Verbosity)
+        run: terraform plan
+      - name: Terraform Plan ( With Trace Verbosity)
         env:
           TF_LOG: TRACE
         run: terraform plan
