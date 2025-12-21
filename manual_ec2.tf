@@ -3,7 +3,8 @@ resource "aws_instance" "manual_ec2" {
   instance_type = "t2.micro"
 
   tags = {
-    Project     = var.PROJECT_NAME
-    Environment = var.ENVIRONMENT
+    Name        = "Amazon EC2 Server"
+    Description = "Provisioned using Github Actions CI/CD through Terraform"
+    Environment = "Prod"
   }
 }
