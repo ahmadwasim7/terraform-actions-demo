@@ -5,6 +5,9 @@ on:
     branches:
       - master
 
+env:
+  AWS_DEFAULT_REGION: us-east-1
+        
 jobs:
   terraform-plan:
     runs-on: ubuntu-latest
