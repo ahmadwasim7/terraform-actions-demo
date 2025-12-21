@@ -7,8 +7,8 @@ on:
 env:
   TF_WORKSPACE: production
   AWS_REGION: ap-south-1
-  PROJECT_NAME: payments-api
-  ENVIRONMENT: production
+  TF_VAR_project_name: payments-api
+  TF_VAR_environment: production
 
 jobs:
   terraform-plan:
