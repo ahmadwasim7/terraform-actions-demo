@@ -1,0 +1,21 @@
+name: Terraform CI (Workflow Env)
+
+on:
+  push:
+    branches: [ master ]
+
+env:
+  TF_WORKSPACE: production
+  AWS_REGION: ap-south-1
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+
+      - run: terraform init
+      - run: terraform workspace select $TF_WORKSPACE || terraform workspace new $TF_WORKSPACE
+      - run: terraform plan
