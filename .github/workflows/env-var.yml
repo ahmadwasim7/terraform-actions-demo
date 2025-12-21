@@ -3,7 +3,7 @@ name: Terraform CI - Environment Specific Secrets
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   terraform-plan:
