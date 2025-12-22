@@ -24,13 +24,13 @@ jobs:
         run: terraform fmt -check
 
       - name: Save formatting diff
-        if: failure() && steps.fmt.outcome == 'failure'
+        if: failure()
         run: |
-            terraform fmt -diff > fmt-diff.txt || true
+          terraform fmt -diff > fmt-diff.txt || echo "No diff generated" > fmt-diff.txt
 
       - name: Upload fmt diff
-        if: failure() && steps.fmt.outcome == 'failure'
-        uses: actions/upload-artifact@v6
+        if: failure()
+        uses: actions/upload-artifact@v4
         with:
-            name: terraform-fmt-diff
-            path: fmt-diff.txt
+          name: terraform-fmt-diff
+          path: fmt-diff.txt
