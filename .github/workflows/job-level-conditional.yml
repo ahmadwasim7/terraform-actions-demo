@@ -1,0 +1,65 @@
+name: Terraform CI with Failure Diagnostics
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  terraform-checks:
+    name: Terraform Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Fmt Check
+        run: terraform fmt -check
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+  failure-diagnostics:
+    name: Upload Terraform Failure Diagnostics
+    runs-on: ubuntu-latest
+
+    # 🔑 THIS IS MANDATORY
+    needs: terraform-checks
+
+    # 🔑 Run ONLY if terraform-checks failed
+    if: failure()
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Generate failure report
+        run: |
+          echo "Terraform pipeline failed" > failure-report.txt
+          echo "Commit: $GITHUB_SHA" >> failure-report.txt
+          echo "Time: $(date)" >> failure-report.txt
+
+      - name: Upload report to S3
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Push failure report to S3
+        run: |
+          aws s3 cp failure-report.txt s3://my-terraform-ci-logs/failure-report-$GITHUB_RUN_ID.txt
