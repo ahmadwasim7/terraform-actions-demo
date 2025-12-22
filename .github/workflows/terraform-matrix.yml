@@ -1,0 +1,58 @@
+name: Terraform Matrix Deploy (EC2)
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  terraform-deploy:
+    name: Deploy EC2 (${{ matrix.environment }} | ${{ matrix.region }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: [dev, staging, prod]
+        region: [us-east-1, ap-south-1]
+
+    env:
+      TF_VAR_environment: ${{ matrix.environment }}
+      TF_VAR_aws_region: ${{ matrix.region }}
+
+    steps:
+      # 1️⃣ Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Configure AWS credentials
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ matrix.region }}
+
+      # 3️⃣ Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # 4️⃣ Terraform Init
+      - name: Terraform Init
+        run: terraform init
+
+      # 5️⃣ Terraform Format Check
+      - name: Terraform Format Check
+        run: terraform fmt -check
+
+      # 6️⃣ Terraform Validate
+      - name: Terraform Validate
+        run: terraform validate
+
+      # 7️⃣ Terraform Plan
+      - name: Terraform Plan
+        run: terraform plan
+
+      # 8️⃣ Terraform Apply
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
