@@ -21,7 +21,7 @@ jobs:
 
       - name: Terraform fmt check
         id: fmt
-        run: terraform fmt -check -diff
+        run: terraform fmt -check
 
       - name: Save formatting diff
         if: failure() && steps.fmt.outcome == 'failure'
