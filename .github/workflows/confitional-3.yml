@@ -30,7 +30,7 @@ jobs:
 
       - name: Upload fmt diff
         if: failure() && steps.fmt.outcome == 'failure'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v6
         with:
             name: terraform-fmt-diff
             path: fmt-diff.txt
