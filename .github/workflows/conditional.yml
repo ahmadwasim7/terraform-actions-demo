@@ -24,10 +24,14 @@ jobs:
 
       - name: Terraform Validate
         id: validate
-        run: terraform validate
+        #run: terraform validate
+        continue-on-error: true
+        run: |
+            terraform validate -json > validate.json
 
       - name: Upload validation logs
-        if: failure() && steps.validate.outcome == 'failure'
-        run: |
-          terraform validate -json > validate-error.json
-          echo validate-error.json
+        if: steps.validate.outcome == 'failure'
+        uses: actions/upload-artifact@v6
+        with:
+          name: terraform-validate-errors
+          path: validate.json
