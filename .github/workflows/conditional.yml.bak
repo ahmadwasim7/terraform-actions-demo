@@ -24,8 +24,7 @@ jobs:
 
       - name: Terraform Validate
         id: validate
-        #run: terraform validate
-        #continue-on-error: true
+        continue-on-error: true
         run: |
             terraform validate -json > validate.json
 
