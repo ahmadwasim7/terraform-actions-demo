@@ -2,7 +2,7 @@ name: AWS OIDC Test
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, dev ]
 
 permissions:
   id-token: write   # 🔴 MUST for OIDC
